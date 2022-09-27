@@ -85,7 +85,7 @@ let parseTrade =
     return {buyOrSell = buyOrSell; numShares = numShares; ticker = ticker; price = price; allOrNone = allOrNone}
   } <?> "trade"
 
-let result: ParserResult<Trade list,unit> = runParserOnFile (many parseTrade) () "input.txt" System.Text.Encoding.UTF8
+let result: ParserResult<Trade list,unit> = runParserOnFile (many parseTrade) () "input.txt" System.Text.Encoding.ASCII
 
 let trades: Trade list = 
   match result with
