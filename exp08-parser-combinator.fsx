@@ -46,7 +46,7 @@ let convertTicker inputString =
 let parseTicker = 
   parse{
     do! spaces
-    let! tickerCharList = (many asciiUpper) 
+    let! tickerCharList = (many1 asciiUpper) 
     let tickerString =  tickerCharList |> List.map string |> List.reduce (+)
     let ticker = convertTicker tickerString
     return ticker
@@ -62,7 +62,7 @@ let parsePrice =
 let optionalIgnore str = 
   parse {
     do! spaces
-    return! opt (pstring str)
+    return! skipMany (pstring str)    
   }
 
 let parsePortion = 
@@ -76,9 +76,9 @@ let parseTrade =
   parse {
     let! buyOrSell = parseTransaction
     let! numShares = parseNumShares         
-    let! _ = optionalIgnore "SharesOf"    
+    do! optionalIgnore "SharesOf"    
     let! ticker = parseTicker
-    let! _ = optionalIgnore "At"
+    do! optionalIgnore "At"
     let! price = parsePrice
     let! allOrNone = parsePortion 
 
