@@ -28,14 +28,14 @@ let parseTransaction =
     do! spaces
     let! buyOrSellString = choice [(pstring "Buy");(pstring "Sell")]
     return (convertTransaction buyOrSellString)
-  } <?> "buyOrSell"
+  } 
 
 let parseNumShares = 
   parse {
     do! spaces
     let! numShares = pint32
     return numShares
-  } <?> "numShares"
+  }
 
 let convertTicker inputString = 
   match inputString with
@@ -50,14 +50,14 @@ let parseTicker =
     let tickerString =  tickerCharList |> List.map string |> List.reduce (+)
     let ticker = convertTicker tickerString
     return ticker
-  } <?> "ticker"
+  }
 
 let parsePrice = 
   parse {
     do! spaces
     let! price = pfloat
     return decimal(price)
-  } <?> "price"
+  }
 
 let optionalIgnore str = 
   parse {
@@ -70,7 +70,7 @@ let parsePortion =
     do! spaces
     let! portion = choice [(pstring "AllOrNone"); (pstring "Partial"); (preturn "AllOrNone")]
     return portion = "AllOrNone"
-  } <?> "portion"
+  } 
 
 let parseTrade =
   parse {
@@ -83,9 +83,9 @@ let parseTrade =
     let! allOrNone = parsePortion 
 
     return {buyOrSell = buyOrSell; numShares = numShares; ticker = ticker; price = price; allOrNone = allOrNone}
-  } <?> "trade"
+  } 
 
-let result: ParserResult<Trade list,unit> = runParserOnFile (many parseTrade) () "input.txt" System.Text.Encoding.ASCII
+let result: ParserResult<Trade list,unit> = runParserOnFile (many parseTrade) () "bad_input.txt" System.Text.Encoding.ASCII
 
 let trades: Trade list = 
   match result with
